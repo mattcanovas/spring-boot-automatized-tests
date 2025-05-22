@@ -128,4 +128,28 @@ public class PersonRepositoryTest {
         assertEquals(personFinded.getFirstName(), person0.getFirstName());
         assertEquals(personFinded.getLastName(), person0.getLastName());
     }
+
+    @Test
+    public void testGivenPersonObject_AfterSaved_WhenFindByFirstNameAndLastNameWithNativeQueryIndexParameters_ShouldReturnSavedPersonBefore() {
+        Person person0 = PersonFactory.createDefaultPerson();
+        person0 = this.repository.save(person0);
+
+        Person personFinded = this.repository.findByFirstNameAndLastNameWithNativeQueryIndexesParameters(person0.getFirstName(), person0.getLastName()).get();
+
+        assertNotNull(personFinded);
+        assertEquals(personFinded.getFirstName(), person0.getFirstName());
+        assertEquals(personFinded.getLastName(), person0.getLastName());
+    }
+
+    @Test
+    public void testGivenPersonObject_AfterSaved_WhenFindByFirstNameAndLastNameWithNativeQueryNamedParameters_ShouldReturnSavedPersonBefore() {
+        Person person0 = PersonFactory.createDefaultPerson();
+        person0 = this.repository.save(person0);
+
+        Person personFinded = this.repository.findByFirstNameAndLastNameWithNativeQueryNamedParameters(person0.getFirstName(), person0.getLastName()).get();
+
+        assertNotNull(personFinded);
+        assertEquals(personFinded.getFirstName(), person0.getFirstName());
+        assertEquals(personFinded.getLastName(), person0.getLastName());
+    }
 }
