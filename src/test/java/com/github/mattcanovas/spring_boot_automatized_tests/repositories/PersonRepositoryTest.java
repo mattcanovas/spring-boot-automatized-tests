@@ -104,4 +104,28 @@ public class PersonRepositoryTest {
 
         assertTrue(personOptional.isEmpty());
     }
+
+    @Test
+    public void testGivenPersonObject_AfterSaved_WhenFindByFirstNameAndLastNameWithJPQLIndexParameters_ShouldReturnSavedPersonBefore() {
+        Person person0 = PersonFactory.createDefaultPerson();
+        person0 = this.repository.save(person0);
+
+        Person personFinded = this.repository.findByFirstNameAndLastNameWithJPQLIndexesParameters(person0.getFirstName(), person0.getLastName()).get();
+
+        assertNotNull(personFinded);
+        assertEquals(personFinded.getFirstName(), person0.getFirstName());
+        assertEquals(personFinded.getLastName(), person0.getLastName());
+    }
+
+    @Test
+    public void testGivenPersonObject_AfterSaved_WhenFindByFirstNameAndLastNameWithJPQLNamedParameters_ShouldReturnSavedPersonBefore() {
+        Person person0 = PersonFactory.createDefaultPerson();
+        person0 = this.repository.save(person0);
+
+        Person personFinded = this.repository.findByFirstNameAndLastNameWithJPQLNamedParameters(person0.getFirstName(), person0.getLastName()).get();
+
+        assertNotNull(personFinded);
+        assertEquals(personFinded.getFirstName(), person0.getFirstName());
+        assertEquals(personFinded.getLastName(), person0.getLastName());
+    }
 }
