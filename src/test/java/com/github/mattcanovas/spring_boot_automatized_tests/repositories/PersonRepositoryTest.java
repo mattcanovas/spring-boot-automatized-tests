@@ -62,4 +62,15 @@ public class PersonRepositoryTest {
         assertNotNull(personFinded);
         assertEquals(personFinded.getId(), person0.getId());
     }
+
+    @Test
+    public void testGivenPersonObject_AfterSave_WhenFindByEmail_ShouldReturnSavedPersonBefore() {
+        Person person0 = new Person(PERSON_DEFAULT_FIRST_NAME, PERSON_DEFAULT_LAST_NAME, "validemail@gmail.com");
+        this.repository.save(person0);
+        
+        Person personFinded = this.repository.findByEmail(person0.getEmail()).get();
+
+        assertNotNull(personFinded);
+        assertEquals(person0.getEmail(), personFinded.getEmail());
+    }
 }
