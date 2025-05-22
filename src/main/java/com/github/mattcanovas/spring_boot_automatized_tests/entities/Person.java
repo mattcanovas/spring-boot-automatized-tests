@@ -1,4 +1,4 @@
-package com.github.mattcanovas.sprint_boot_automatized_tests.entities;
+package com.github.mattcanovas.spring_boot_automatized_tests.entities;
 
 import java.io.Serializable;
 
