@@ -10,7 +10,7 @@
 		<relativePath /> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.github.mattcanovas</groupId>
-	<artifactId>sprint-boot-automatized-tests</artifactId>
+	<artifactId>spring-boot-automatized-tests</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>sprint-boot-automatized-tests</name>
 	<description>Demo project for Spring Boot</description>
