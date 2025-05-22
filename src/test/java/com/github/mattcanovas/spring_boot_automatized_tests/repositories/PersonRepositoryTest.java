@@ -10,12 +10,14 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
 import com.github.mattcanovas.spring_boot_automatized_tests.entities.Person;
+import com.github.mattcanovas.spring_boot_automatized_tests.factories.PersonFactory;
 
 @DataJpaTest
 public class PersonRepositoryTest {
@@ -29,7 +31,7 @@ public class PersonRepositoryTest {
 
     @Test
     public void testGivenPersonObject_WhenSave_ShouldReturnSavedPerson() {
-        Person person0 = new Person(PERSON_DEFAULT_FIRST_NAME, PERSON_DEFAULT_LAST_NAME, PERSON_DEFAULT_EMAIL);
+        Person person0 = PersonFactory.createDefaultPerson();
 
         Person savedPerson = this.repository.save(person0);
 
@@ -41,7 +43,7 @@ public class PersonRepositoryTest {
     public void testGivenPersonList_WhenFindAll_ThenReturnPersonList() {
         this.repository.saveAll(new ArrayList<Person>() {
             {
-                add(new Person(PERSON_DEFAULT_FIRST_NAME, PERSON_DEFAULT_LAST_NAME, PERSON_DEFAULT_EMAIL));
+                add(PersonFactory.createDefaultPerson());
                 add(new Person("Juliana", PERSON_DEFAULT_LAST_NAME, PERSON_DEFAULT_EMAIL));
             }
         });
@@ -54,7 +56,7 @@ public class PersonRepositoryTest {
 
     @Test
     public void testGivenPersonObject_AfterSaved_WhenGetReferenceById_ShouldReturnSavedPersonBefore() {
-        Person person0 = new Person(PERSON_DEFAULT_FIRST_NAME, PERSON_DEFAULT_LAST_NAME, PERSON_DEFAULT_EMAIL);
+        Person person0 = PersonFactory.createDefaultPerson();
         person0 = this.repository.save(person0);
 
         Person personFinded = this.repository.getReferenceById(person0.getId());
@@ -67,10 +69,39 @@ public class PersonRepositoryTest {
     public void testGivenPersonObject_AfterSave_WhenFindByEmail_ShouldReturnSavedPersonBefore() {
         Person person0 = new Person(PERSON_DEFAULT_FIRST_NAME, PERSON_DEFAULT_LAST_NAME, "validemail@gmail.com");
         this.repository.save(person0);
-        
+
         Person personFinded = this.repository.findByEmail(person0.getEmail()).get();
 
         assertNotNull(personFinded);
         assertEquals(person0.getEmail(), personFinded.getEmail());
+    }
+
+    @Test
+    public void testGivenPersonObject_AfterUpdated_WhenFindById_ShoudlReturnUpdatedPersonBefore() {
+        Person person0 = PersonFactory.createDefaultPerson();
+        person0 = this.repository.save(person0);
+
+        Person personSaved = this.repository.findById(person0.getId()).get();
+        personSaved.setFirstName("Rafael");
+        personSaved.setEmail("validEmailForRafael@gmail.com");
+
+        Person updatedPerson = this.repository.save(personSaved);
+
+        assertNotNull(updatedPerson);
+        assertEquals(person0.getId(), updatedPerson.getId());
+        assertEquals("Rafael", updatedPerson.getFirstName());
+        assertEquals("validEmailForRafael@gmail.com", updatedPerson.getEmail());
+    }
+
+    @Test 
+    public void testGivenPersonObject_AfterSaved_WhenDeleted_ShoudlReturnNonePerson() {
+        Person person0 = PersonFactory.createDefaultPerson();
+        person0 = this.repository.save(person0);
+
+        this.repository.deleteById(person0.getId());
+
+        Optional<Person> personOptional = this.repository.findById(person0.getId());
+
+        assertTrue(personOptional.isEmpty());
     }
 }
