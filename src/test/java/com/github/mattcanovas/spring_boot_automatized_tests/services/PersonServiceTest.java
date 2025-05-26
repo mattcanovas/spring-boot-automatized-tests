@@ -16,6 +16,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -71,7 +72,7 @@ public class PersonServiceTest {
         
         List<Person> persons = this.service.findAll();
 
-        assertThat(persons, isNotNull());
+        assertThat(persons.isEmpty(), is(false));
         assertThat(persons.size(), is(2));
     }
 
