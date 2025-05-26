@@ -1,4 +1,4 @@
-package configurations;
+package com.github.mattcanovas.spring_boot_automatized_tests.configurations;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
