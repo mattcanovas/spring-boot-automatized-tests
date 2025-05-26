@@ -123,4 +123,18 @@ public class PersonControllerTest {
                 .andExpect(jsonPath("$.email", is(person.getEmail())));
     }
 
+    @Test
+    public void testGivenInvalidPersonIdWithPersonObject_WhenUpdatePerson_ThenReturnNotFound() throws Exception {
+        Long personId = 1L;
+        person.setId(personId);
+        given(service.findById(personId)).willThrow(IllegalStateException.class);
+        given(service.update(any(Person.class))).willAnswer(invocation -> invocation.getArgument(1));
+        ResultActions response = mockMvc.perform(put("/v1/person")
+               .contentType(MediaType.APPLICATION_JSON)
+               .content(this.mapper.writeValueAsString(person)));
+
+        response.andExpect(status().isNotFound())
+               .andDo(print());
+    }
+
 }
