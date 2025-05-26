@@ -7,7 +7,9 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.BDDMockito.willDoNothing;
 import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
 import java.util.Collections;
@@ -35,6 +37,8 @@ public class PersonServiceTest {
     private PersonService service;
 
     private Person person0_;
+
+    private static final Integer ONE_INVOCATION = 1;
 
     @BeforeEach
     public void setup() {
@@ -122,6 +126,27 @@ public class PersonServiceTest {
 
         IllegalStateException exception = assertThrows(IllegalStateException.class, () -> {
             this.service.update(person0_);
+        });
+        assertThat(exception.getClass(), is(IllegalStateException.class));
+        assertThat(exception.getMessage(), is("Person with given id: " + person0_.getId() + " does not exist!"));
+    }
+
+    @Test
+    public void testGivenPersonId_WhenDeletePersonById_ThenReturnVoid() {
+        given(this.repository.findById(person0_.getId())).willReturn(Optional.of(person0_));
+        willDoNothing().given(this.repository).delete(person0_);
+
+        this.service.delete(person0_.getId());
+
+        verify(this.repository, times(ONE_INVOCATION)).delete(person0_);
+    }
+
+    @Test
+    public void testGivenPersonIdThatDoesNotExist_WhenDeletePersonById_ThenThrownIllegalStateException() {
+        given(this.repository.findById(person0_.getId())).willReturn(Optional.empty());
+
+        IllegalStateException exception = assertThrows(IllegalStateException.class, () -> {
+            this.service.delete(person0_.getId());
         });
         assertThat(exception.getClass(), is(IllegalStateException.class));
         assertThat(exception.getMessage(), is("Person with given id: " + person0_.getId() + " does not exist!"));
