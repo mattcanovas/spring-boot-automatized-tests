@@ -59,8 +59,7 @@ public class PersonService {
 
     public void delete(Long id) {
         logger.info("Deleting one person!");
-        Person entity = this.repository.findById(id)
-           .orElseThrow(() -> new IllegalStateException("Person with given id: " + id + " does not exist!"));
+        Person entity = findById(id);
         this.repository.delete(entity);
     }
 

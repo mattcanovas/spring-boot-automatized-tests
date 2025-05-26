@@ -3,6 +3,11 @@ package com.github.mattcanovas.spring_boot_automatized_tests.controllers;
 import static org.hamcrest.Matchers.is;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.BDDMockito.willDoNothing;
+import static org.mockito.BDDMockito.willThrow;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
@@ -16,7 +21,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.data.crossstore.ChangeSetPersister.NotFoundException;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
@@ -130,11 +134,35 @@ public class PersonControllerTest {
         given(service.findById(personId)).willThrow(IllegalStateException.class);
         given(service.update(any(Person.class))).willAnswer(invocation -> invocation.getArgument(1));
         ResultActions response = mockMvc.perform(put("/v1/person")
-               .contentType(MediaType.APPLICATION_JSON)
-               .content(this.mapper.writeValueAsString(person)));
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(this.mapper.writeValueAsString(person)));
 
         response.andExpect(status().isNotFound())
-               .andDo(print());
+                .andDo(print());
+    }
+
+    @Test
+    public void testGivenPersonId_WhenDeletePerson_ThenReturn204() throws Exception {
+        Long personId = 1L;
+        willDoNothing().given(service).delete(any(Long.class));
+
+        ResultActions response = mockMvc.perform(delete("/v1/person/{id}", personId));
+
+        verify(service, times(1)).delete(personId);
+        response.andExpect(status().isNoContent())
+                .andDo(print());
+    }
+
+    @Test
+    public void testGivenInvalidPersonId_WhenDeletePerson_ThenReturn404() throws Exception {
+        Long personId = 1L;
+        willThrow(IllegalStateException.class).given(service).delete(any(Long.class));
+
+        ResultActions response = mockMvc.perform(delete("/v1/person/{id}", personId));
+
+        verify(service, times(1)).delete(personId);
+        response.andExpect(status().isNotFound())
+                .andDo(print());
     }
 
 }
