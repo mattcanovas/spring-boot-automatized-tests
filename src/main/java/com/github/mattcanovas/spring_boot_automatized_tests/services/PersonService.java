@@ -1,5 +1,6 @@
 package com.github.mattcanovas.spring_boot_automatized_tests.services;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.slf4j.Logger;
@@ -29,6 +30,11 @@ public class PersonService {
             throw new IllegalStateException("Person already exist with given e-Mail: " + person.getEmail());
         }
         return this.repository.save(person);
+    }
+
+    public List<Person> findAll() {
+        logger.info("Find all persons!");
+        return this.repository.findAll();
     }
 
 }
