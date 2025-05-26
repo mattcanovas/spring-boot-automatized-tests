@@ -49,9 +49,7 @@ public class PersonService {
     public Person update(Person person0_) {
         logger.info("Updating one person!");
 
-        Person entity = this.repository.findById(person0_.getId())
-            .orElseThrow(() -> new IllegalStateException("Person with given id: " + person0_.getId() + " does not exist!"));
-
+        Person entity = this.findById(person0_.getId());
         entity.setFirstName(person0_.getFirstName());
         entity.setLastName(person0_.getLastName());
         entity.setEmail(person0_.getEmail());

@@ -5,6 +5,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -100,7 +101,26 @@ public class PersonControllerTest {
         ResultActions response = mockMvc.perform(get("/v1/person/{id}", personId));
 
         response.andExpect(status().isNotFound())
-               .andDo(print());
+                .andDo(print());
+    }
+
+    @Test
+    public void testGivenPersonIdWithPersonObject_WhenUpdatePerson_ThenReturnUpdatedPersonObject() throws Exception {
+        Long personId = 1L;
+        person.setId(personId);
+        given(service.findById(personId)).willAnswer((invocation) -> person);
+        given(service.update(any(Person.class))).willAnswer((invocation) -> invocation.getArgument(0));
+
+        ResultActions response = mockMvc.perform(put("/v1/person")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(this.mapper.writeValueAsString(person)));
+
+        response.andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id", is(person.getId().intValue())))
+                .andExpect(jsonPath("$.firstName", is(person.getFirstName())))
+                .andExpect(jsonPath("$.lastName", is(person.getLastName())))
+                .andExpect(jsonPath("$.email", is(person.getEmail())));
     }
 
 }
