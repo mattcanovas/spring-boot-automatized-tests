@@ -105,4 +105,26 @@ public class PersonServiceTest {
         assertThat(exception.getMessage(), is("Person with given id: " + person0_.getId() + " does not exist!"));
     }
 
+    @Test
+    public void testGivenPersonObject_WhenUpdatePerson_ThenReturnUpdatedPersonObject() {
+        given(this.repository.findById(person0_.getId())).willReturn(Optional.of(person0_));
+        given(this.repository.save(person0_)).willReturn(person0_);
+
+        Person updatedPerson = this.service.update(person0_);
+
+        assertNotNull(updatedPerson);
+        assertThat(updatedPerson.getFirstName(), is(person0_.getFirstName()));
+    }
+
+    @Test
+    public void testGivenPersonObjectThatDoesNotExist_WhenUpdatePerson_ThenThrownIllegalStateException() {
+        given(this.repository.findById(person0_.getId())).willReturn(Optional.empty());
+
+        IllegalStateException exception = assertThrows(IllegalStateException.class, () -> {
+            this.service.update(person0_);
+        });
+        assertThat(exception.getClass(), is(IllegalStateException.class));
+        assertThat(exception.getMessage(), is("Person with given id: " + person0_.getId() + " does not exist!"));
+    }
+
 }
