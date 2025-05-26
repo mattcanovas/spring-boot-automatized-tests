@@ -6,7 +6,6 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.ArgumentMatchers.isNotNull;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
@@ -16,7 +15,6 @@ import java.util.List;
 import java.util.Optional;
 
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -84,6 +82,27 @@ public class PersonServiceTest {
 
         assertThat(persons.isEmpty(), is(true));
         assertThat(persons.size(), is(0));
+    }
+
+    @Test
+    public void testGivenPersonId_WhenFindPersonById_ThenReturnPersonObject() {
+        given(this.repository.findById(person0_.getId())).willReturn(Optional.of(person0_));
+
+        Person person = this.service.findById(person0_.getId());
+
+        assertNotNull(person);
+        assertThat(person.getFirstName(), is(person0_.getFirstName()));
+    }
+
+    @Test
+    public void testGivenPersonIdThatDoesNotExist_WhenFindPersonById_ThenThrownIllegalStateException() {
+        given(this.repository.findById(person0_.getId())).willReturn(Optional.empty());
+
+        IllegalStateException exception = assertThrows(IllegalStateException.class, () -> {
+            this.service.findById(person0_.getId());
+        });
+        assertThat(exception.getClass(), is(IllegalStateException.class));
+        assertThat(exception.getMessage(), is("Person with given id: " + person0_.getId() + " does not exist!"));
     }
 
 }

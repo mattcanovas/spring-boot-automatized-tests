@@ -37,4 +37,13 @@ public class PersonService {
         return this.repository.findAll();
     }
 
+    public Person findById(Long id) {
+        logger.info("Find one person by id: " + id);
+        Optional<Person> person = this.repository.findById(id);
+        if(person.isPresent()) {
+            return person.get();
+        }
+        throw new IllegalStateException("Person with given id: " + id + " does not exist!");
+    }
+
 }
