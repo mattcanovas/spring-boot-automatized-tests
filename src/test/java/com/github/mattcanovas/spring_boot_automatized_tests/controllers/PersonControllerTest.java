@@ -3,10 +3,13 @@ package com.github.mattcanovas.spring_boot_automatized_tests.controllers;
 import static org.hamcrest.Matchers.is;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+import java.util.List;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -49,6 +52,8 @@ public class PersonControllerTest {
     @Test
     public void testGivenPersonObject_WhenCreatePerson_ThenReturnSavedPerson()
             throws JsonProcessingException, Exception {
+        // willAnswer is another way to return a value without using a specific object,
+        // returning the same object that was passed as a parameter.
         given(this.service.create(any(Person.class))).willAnswer((invocation) -> invocation.getArgument(0));
 
         ResultActions response = mockMvc.perform(post("/v1/person")
@@ -60,6 +65,19 @@ public class PersonControllerTest {
                 .andExpect(jsonPath("$.firstName", is(person0_.getFirstName())))
                 .andExpect(jsonPath("$.lastName", is(person0_.getLastName())))
                 .andExpect(jsonPath("$.email", is(person0_.getEmail())));
+    }
+
+    @Test
+    public void testGivenRequestedGetPersons_WhenFindAllPersons_ThenReturnListOfPersons()
+            throws JsonProcessingException, Exception {
+        List<Person> persons = List.of(person0_, PersonFactory.createCustomPerson("John", "Doe", "EMAIL"));
+        given(this.service.findAll()).willReturn(persons);
+
+        ResultActions response = this.mockMvc.perform(get("/v1/person"));
+
+        response.andExpect(status().isOk())
+                .andDo(print())
+                .andExpect(jsonPath("$.size()", is(persons.size())));
     }
 
 }
