@@ -21,7 +21,7 @@ public class AbstractIntegrationTest {
             Startables.deepStart(Stream.of(postgres)).join();
         }
 
-        private static Map<String, String> createConnectionConfiguration() {
+        private static Map<String, Object> createConnectionConfiguration() {
             return Map.of(
                 "spring.datasource.url", postgres.getJdbcUrl(),
                 "spring.datasource.username", postgres.getUsername(),
@@ -29,12 +29,11 @@ public class AbstractIntegrationTest {
             );
         }
 
-        @SuppressWarnings({ "rawtypes", "unchecked" })
         @Override
         public void initialize(ConfigurableApplicationContext applicationContext) {
             startContainers();
             ConfigurableEnvironment environment = applicationContext.getEnvironment();
-            MapPropertySource testContainers = new MapPropertySource("testContainers", (Map) createConnectionConfiguration());
+            MapPropertySource testContainers = new MapPropertySource("testContainers", createConnectionConfiguration());
             environment.getPropertySources().addFirst(testContainers);
         }
 
