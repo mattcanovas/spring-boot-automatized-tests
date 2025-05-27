@@ -13,15 +13,15 @@ import org.testcontainers.lifecycle.Startables;
 
 @ContextConfiguration(initializers = AbstractIntegrationTest.Initializer.class)
 public class AbstractIntegrationTest {
-    private static class Initializer implements ApplicationContextInitializer<ConfigurableApplicationContext> {
+    public static class Initializer implements ApplicationContextInitializer<ConfigurableApplicationContext> {
 
-        private static PostgreSQLContainer<?> postgres = new PostgreSQLContainer<>("postgres:17.5");
+        public static PostgreSQLContainer<?> postgres = new PostgreSQLContainer<>("postgres:17.5");
 
         private static void startContainers() {
             Startables.deepStart(Stream.of(postgres)).join();
         }
 
-        private static Map<String, Object> createConnectionConfiguration() {
+        private static Map<String, String> createConnectionConfiguration() {
             return Map.of(
                 "spring.datasource.url", postgres.getJdbcUrl(),
                 "spring.datasource.username", postgres.getUsername(),
@@ -29,11 +29,12 @@ public class AbstractIntegrationTest {
             );
         }
 
+        @SuppressWarnings({ "rawtypes", "unchecked" })
         @Override
         public void initialize(ConfigurableApplicationContext applicationContext) {
             startContainers();
             ConfigurableEnvironment environment = applicationContext.getEnvironment();
-            MapPropertySource testContainers = new MapPropertySource("testContainers", createConnectionConfiguration());
+            MapPropertySource testContainers = new MapPropertySource("testContainers", (Map) createConnectionConfiguration());
             environment.getPropertySources().addFirst(testContainers);
         }
 
