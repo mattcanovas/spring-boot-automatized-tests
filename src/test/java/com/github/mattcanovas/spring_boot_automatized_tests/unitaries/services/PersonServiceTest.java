@@ -1,4 +1,4 @@
-package com.github.mattcanovas.spring_boot_automatized_tests.services;
+package com.github.mattcanovas.spring_boot_automatized_tests.unitaries.services;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
@@ -26,6 +26,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import com.github.mattcanovas.spring_boot_automatized_tests.entities.Person;
 import com.github.mattcanovas.spring_boot_automatized_tests.factories.PersonFactory;
 import com.github.mattcanovas.spring_boot_automatized_tests.repositories.PersonRepository;
+import com.github.mattcanovas.spring_boot_automatized_tests.services.PersonService;
 
 @ExtendWith(MockitoExtension.class)
 public class PersonServiceTest {

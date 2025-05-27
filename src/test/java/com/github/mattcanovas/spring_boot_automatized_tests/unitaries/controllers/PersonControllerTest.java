@@ -1,4 +1,4 @@
-package com.github.mattcanovas.spring_boot_automatized_tests.controllers;
+package com.github.mattcanovas.spring_boot_automatized_tests.unitaries.controllers;
 
 import static org.hamcrest.Matchers.is;
 import static org.mockito.ArgumentMatchers.any;
@@ -27,6 +27,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.github.mattcanovas.spring_boot_automatized_tests.controllers.PersonController;
 import com.github.mattcanovas.spring_boot_automatized_tests.entities.Person;
 import com.github.mattcanovas.spring_boot_automatized_tests.factories.PersonFactory;
 import com.github.mattcanovas.spring_boot_automatized_tests.services.PersonService;

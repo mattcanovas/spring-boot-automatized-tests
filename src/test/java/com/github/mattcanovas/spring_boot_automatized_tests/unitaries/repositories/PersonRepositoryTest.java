@@ -1,4 +1,4 @@
-package com.github.mattcanovas.spring_boot_automatized_tests.repositories;
+package com.github.mattcanovas.spring_boot_automatized_tests.unitaries.repositories;
 
 import static com.github.mattcanovas.spring_boot_automatized_tests.utils.Constants.PERSON_DEFAULT_EMAIL;
 import static com.github.mattcanovas.spring_boot_automatized_tests.utils.Constants.PERSON_DEFAULT_FIRST_NAME;
@@ -19,6 +19,7 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
 import com.github.mattcanovas.spring_boot_automatized_tests.entities.Person;
 import com.github.mattcanovas.spring_boot_automatized_tests.factories.PersonFactory;
+import com.github.mattcanovas.spring_boot_automatized_tests.repositories.PersonRepository;
 
 @DataJpaTest
 public class PersonRepositoryTest {
