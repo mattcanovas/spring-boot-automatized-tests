@@ -9,8 +9,8 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
+import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -117,19 +117,19 @@ public class PersonControllerIntegrationTest extends AbstractIntegrationConfigur
     @Order(3)
     public void integrationTestGivenPersonObject_When_FindById_ShouldReturnAPersonObject() throws Exception {
         String response = RestAssured.given().spec(specification)
-            .pathParam("id", person.getId())
-            .when()
-            .get("{id}")
-           .then()
-           .statusCode(200)
-           .extract()
-           .body()
-           .asString();
+                .pathParam("id", person.getId())
+                .when()
+                .get("{id}")
+                .then()
+                .statusCode(200)
+                .extract()
+                .body()
+                .asString();
 
         Person foundedPerson = mapper.readValue(response, Person.class);
 
         assertNotNull(foundedPerson);
-        
+
         assertNotNull(foundedPerson.getId());
         assertNotNull(foundedPerson.getFirstName());
         assertNotNull(foundedPerson.getLastName());
@@ -145,21 +145,21 @@ public class PersonControllerIntegrationTest extends AbstractIntegrationConfigur
     public void integrationTestGivenPersonObject_AfterCreated_WhenFindAll_ShouldReturnAPersonList() throws Exception {
         Person anotherPerson = PersonFactory.createCustomPerson("Miles", "Morales", "spiderman@gmail.com");
         RestAssured.given().spec(specification)
-           .contentType(IntegrationEnvironmentConfiguration.CONTENT_TYPE_JSON)
-           .body(anotherPerson)
-           .when()
-           .post()
-           .then()
-           .statusCode(201);
+                .contentType(IntegrationEnvironmentConfiguration.CONTENT_TYPE_JSON)
+                .body(anotherPerson)
+                .when()
+                .post()
+                .then()
+                .statusCode(201);
 
         String response = RestAssured.given().spec(specification)
-          .when()
-          .get()
-          .then()
-          .statusCode(200)
-          .extract()
-          .body()
-          .asString();
+                .when()
+                .get()
+                .then()
+                .statusCode(200)
+                .extract()
+                .body()
+                .asString();
 
         List<Person> persons = Arrays.asList(mapper.readValue(response, Person[].class));
 
@@ -190,12 +190,11 @@ public class PersonControllerIntegrationTest extends AbstractIntegrationConfigur
     @Order(5)
     public void integrationTestGivenPersonObject_When_Delete_ShouldReturnNoContent() throws Exception {
         RestAssured.given().spec(specification)
-          .pathParam("id", person.getId())
-          .when()
-          .delete("{id}")
-          .then()
-          .statusCode(204);
+                .pathParam("id", person.getId())
+                .when()
+                .delete("{id}")
+                .then()
+                .statusCode(204);
     }
-
 
 }
