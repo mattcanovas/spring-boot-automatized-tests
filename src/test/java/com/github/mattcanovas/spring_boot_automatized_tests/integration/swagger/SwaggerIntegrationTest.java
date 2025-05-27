@@ -7,12 +7,12 @@ import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import com.github.mattcanovas.spring_boot_automatized_tests.configurations.IntegrationEnvironmentConfiguration;
-import com.github.mattcanovas.spring_boot_automatized_tests.integration.AbstractIntegrationTest;
+import com.github.mattcanovas.spring_boot_automatized_tests.integration.AbstractIntegrationConfiguration;
 
 import io.restassured.RestAssured;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
-public class SwaggerIntegrationTest extends AbstractIntegrationTest {
+public class SwaggerIntegrationTest extends AbstractIntegrationConfiguration {
 
     @Test
     public void testShouldDisplaySwaggerUIPage() {

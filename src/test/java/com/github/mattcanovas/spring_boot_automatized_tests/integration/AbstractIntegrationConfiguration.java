@@ -11,8 +11,8 @@ import org.springframework.test.context.ContextConfiguration;
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.lifecycle.Startables;
 
-@ContextConfiguration(initializers = AbstractIntegrationTest.Initializer.class)
-public class AbstractIntegrationTest {
+@ContextConfiguration(initializers = AbstractIntegrationConfiguration.Initializer.class)
+public class AbstractIntegrationConfiguration {
     public static class Initializer implements ApplicationContextInitializer<ConfigurableApplicationContext> {
 
         public static PostgreSQLContainer<?> postgres = new PostgreSQLContainer<>("postgres:17.5");
